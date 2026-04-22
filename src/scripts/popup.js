@@ -97,7 +97,7 @@ function applyI18n() {
 		if (message) {
 			// Use innerHTML to support simple formatting like <b> in tooltips
 			if (el.classList.contains('tooltip-bubble') || el.classList.contains('cache-info')) {
-				el.innerHTML = message;
+				el.innerHTML = DOMPurify.sanitize(message);
 			} else {
 				el.textContent = message;
 			}
@@ -1508,10 +1508,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (filtered.length === 0) {
 				repoDropdown.innerHTML = `<div class="p-3 text-center text-gray-500 text-sm" style="padding-left: 10px; ">${browser.i18n.getMessage('repoNotFound')}</div>`;
 			} else {
-				repoDropdown.innerHTML = DOMPurify.sanitize(filtered
-					.slice(0, 10)
-					.map(
-						(repo) => `
+				repoDropdown.innerHTML = DOMPurify.sanitize(
+					filtered
+						.slice(0, 10)
+						.map(
+							(repo) => `
                     <div class="repository-dropdown-item" data-repo-name="${repo.fullName}">
                         <div class="repo-name">
                             <span>${repo.name}</span>
@@ -1523,8 +1524,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                 `,
-					)
-					.join(''));
+						)
+						.join(''),
+				);
 
 				repoDropdown.querySelectorAll('.repository-dropdown-item').forEach((item) => {
 					item.addEventListener('click', (e) => {
