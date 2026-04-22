@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
 					isUsernameMatch;
 
 				if (reportEmpty && lastScrumReportHtml && matches) {
-					scrumReport.innerHTML = lastScrumReportHtml;
+					scrumReport.innerHTML = DOMPurify.sanitize(lastScrumReportHtml);
 					if (generateBtn) generateBtn.disabled = false;
 					return;
 				}
@@ -543,7 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			// If cache is expired, still only show the old HTML if it was for the current username
 			if ((!scrumReport.innerHTML || !scrumReport.innerHTML.trim()) && lastScrumReportHtml && isUsernameMatch) {
-				scrumReport.innerHTML = lastScrumReportHtml;
+				scrumReport.innerHTML = DOMPurify.sanitize(lastScrumReportHtml);
 			}
 
 			if (generateBtn) generateBtn.disabled = false;
@@ -676,7 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (insertBtn) {
 			insertBtn.addEventListener('click', () => {
 				const scrumReport = document.getElementById('scrumReport');
-				const content = scrumReport ? scrumReport.innerHTML : '';
+				const content = scrumReport ? DOMPurify.sanitize(scrumReport.innerHTML) : '';
 				const subject = buildScrumSubjectFromPopup();
 
 				if (!content) {
@@ -742,7 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		copyBtn.addEventListener('click', function () {
 			const scrumReport = document.getElementById('scrumReport');
 			const tempDiv = document.createElement('div');
-			tempDiv.innerHTML = scrumReport.innerHTML;
+			tempDiv.innerHTML = DOMPurify.sanitize(scrumReport.innerHTML);
 			document.body.appendChild(tempDiv);
 			tempDiv.style.position = 'absolute';
 			tempDiv.style.left = '-9999px';
@@ -1561,7 +1561,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				repoTags.innerHTML = `<span class="text-xs text-gray-500 select-none" id="repoPlaceholder">${browser.i18n.getMessage('repoPlaceholder')}</span>`;
 				repoCount.textContent = browser.i18n.getMessage('repoCountNone');
 			} else {
-				repoTags.innerHTML = selectedRepos
+				repoTags.innerHTML = DOMPurify.sanitize(selectedRepos
 					.map((repoFullName) => {
 						const repoName = repoFullName.split('/')[1] || repoFullName;
 						return `
@@ -1573,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </span>
                     `;
 					})
-					.join(' ');
+					.join(' '));
 				repoTags.querySelectorAll('.remove-repo-btn').forEach((btn) => {
 					btn.addEventListener('click', (e) => {
 						e.stopPropagation();
