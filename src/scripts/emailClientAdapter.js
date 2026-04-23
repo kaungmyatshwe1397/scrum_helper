@@ -1,3 +1,14 @@
+function sanitizeHtml(html) {
+	if (typeof DOMPurify !== 'undefined') {
+		return DOMPurify.sanitize(html);
+	}
+	// Fallback: strip tags entirely if DOMPurify is somehow unavailable
+	console.warn('[scrum_helper] DOMPurify not available, stripping HTML tags as fallback');
+	const div = document.createElement('div');
+	div.innerHTML = html;
+	return div.textContent || div.innerText || '';
+}
+
 class EmailClientAdapter {
 	isNewConversation() {
 		const clientType = this.detectClient();
@@ -249,13 +260,13 @@ class EmailClientAdapter {
 				case 'focusAndPaste':
 					// Special handling for Outlook
 					element.focus();
-					element.innerHTML = DOMPurify.sanitize(content);
+					element.innerHTML = sanitizeHtml(content);
 					this.dispatchElementEvents(element, ['input', 'change'], true);
 					break;
 
 				case 'setContent': {
 					// Special handling for Yahoo
-					element.innerHTML = DOMPurify.sanitize(content);
+					element.innerHTML = sanitizeHtml(content);
 					element.focus();
 					// Force Yahoo's editor to recognize the change
 					const selection = window.getSelection();
@@ -269,7 +280,7 @@ class EmailClientAdapter {
 
 				default:
 					// Default handling for Google clients
-					element.innerHTML = DOMPurify.sanitize(content);
+					element.innerHTML = sanitizeHtml(content);
 					element.dispatchEvent(new Event(eventType, { bubbles: true }));
 			}
 			return true;
