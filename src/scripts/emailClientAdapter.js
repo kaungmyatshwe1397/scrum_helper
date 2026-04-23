@@ -1,14 +1,3 @@
-function sanitizeHtml(html) {
-	if (typeof DOMPurify !== 'undefined') {
-		return DOMPurify.sanitize(html);
-	}
-	// Fallback: strip tags entirely if DOMPurify is somehow unavailable
-	console.warn('[scrum_helper] DOMPurify not available, stripping HTML tags as fallback');
-	const div = document.createElement('div');
-	div.innerHTML = html;
-	return div.textContent || div.innerText || '';
-}
-
 class EmailClientAdapter {
 	isNewConversation() {
 		const clientType = this.detectClient();

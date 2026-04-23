@@ -97,7 +97,7 @@ function applyI18n() {
 		if (message) {
 			// Use innerHTML to support simple formatting like <b> in tooltips
 			if (el.classList.contains('tooltip-bubble') || el.classList.contains('cache-info')) {
-				el.innerHTML = DOMPurify.sanitize(message);
+				el.innerHTML = sanitizeHtml(message);
 			} else {
 				el.textContent = message;
 			}
@@ -530,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				const matches = (!lastScrumReportCacheKey || lastScrumReportCacheKey === cacheKey) && isUsernameMatch;
 
 				if (reportEmpty && lastScrumReportHtml && matches) {
-					scrumReport.innerHTML = DOMPurify.sanitize(lastScrumReportHtml);
+					scrumReport.innerHTML = sanitizeHtml(lastScrumReportHtml);
 					if (generateBtn) generateBtn.disabled = false;
 					return;
 				}
@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 			// If cache is expired, still only show the old HTML if it was for the current username
 			if ((!scrumReport.innerHTML || !scrumReport.innerHTML.trim()) && lastScrumReportHtml && isUsernameMatch) {
-				scrumReport.innerHTML = DOMPurify.sanitize(lastScrumReportHtml);
+				scrumReport.innerHTML = sanitizeHtml(lastScrumReportHtml);
 			}
 
 			if (generateBtn) generateBtn.disabled = false;
@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (insertBtn) {
 			insertBtn.addEventListener('click', () => {
 				const scrumReport = document.getElementById('scrumReport');
-				const content = scrumReport ? DOMPurify.sanitize(scrumReport.innerHTML) : '';
+				const content = scrumReport ? sanitizeHtml(scrumReport.innerHTML) : '';
 				const subject = buildScrumSubjectFromPopup();
 
 				if (!content) {
@@ -740,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		copyBtn.addEventListener('click', function () {
 			const scrumReport = document.getElementById('scrumReport');
 			const tempDiv = document.createElement('div');
-			tempDiv.innerHTML = DOMPurify.sanitize(scrumReport.innerHTML);
+			tempDiv.innerHTML = sanitizeHtml(scrumReport.innerHTML);
 			document.body.appendChild(tempDiv);
 			tempDiv.style.position = 'absolute';
 			tempDiv.style.left = '-9999px';
@@ -1508,7 +1508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			if (filtered.length === 0) {
 				repoDropdown.innerHTML = `<div class="p-3 text-center text-gray-500 text-sm" style="padding-left: 10px; ">${browser.i18n.getMessage('repoNotFound')}</div>`;
 			} else {
-				repoDropdown.innerHTML = DOMPurify.sanitize(
+				repoDropdown.innerHTML = sanitizeHtml(
 					filtered
 						.slice(0, 10)
 						.map(
@@ -1567,7 +1567,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				repoTags.innerHTML = `<span class="text-xs text-gray-500 select-none" id="repoPlaceholder">${browser.i18n.getMessage('repoPlaceholder')}</span>`;
 				repoCount.textContent = browser.i18n.getMessage('repoCountNone');
 			} else {
-				repoTags.innerHTML = DOMPurify.sanitize(
+				repoTags.innerHTML = sanitizeHtml(
 					selectedRepos
 						.map((repoFullName) => {
 							const repoName = repoFullName.split('/')[1] || repoFullName;
